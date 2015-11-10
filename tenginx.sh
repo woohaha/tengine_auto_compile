@@ -80,7 +80,8 @@ cd $TENGINE_SRC_PATH
 ./configure --user=www --group=www --with-jemalloc --with-http_realip_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_concat_module --with-http_lua_module 
 make && make install && echo '完成!'
 
-SERVICE_CONTENT='[Unit]
+cat > /lib/systemd/system/nginx.service << EOF
+[Unit]
 Description=The NGINX HTTP and reverse proxy server
 After=syslog.target network.target remote-fs.target nss-lookup.target
 
@@ -95,5 +96,6 @@ PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target'
-echo $SERVICE_CONTENT>/lib/systemd/system/nginx.service
+EOF
+
 
