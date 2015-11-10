@@ -11,38 +11,37 @@ JEMALLOC_SRC_PATH='/tmp/jemalloc'
 LUA_JIT_SRC_PATH='/tmp/lua_jit'
 LUA_SRC_PATH='/tmp/lua'
 TENGINE_SRC_PATH='/tmp/tengine'
+LUAJIT_VERSION='2.1'
+export LUAJIT_LIB=/usr/local/lib
+export LUAJIT_INC=/usr/local/include/luajit-${LUAJIT_VERSION}
 queue=0
 if [[ ! -d $JEMALLOC_SRC_PATH ]];then
 {
 	git clone https://github.com/jemalloc/jemalloc.git $JEMALLOC_SRC_PATH && queue=$((queue+1)) &
-	echo $queue
 }
 else queue=$((queue+1))
 fi
 if [[ ! -d $LUA_JIT_SRC_PATH ]];then
 {
 	git clone http://luajit.org/git/luajit-2.0.git $LUA_JIT_SRC_PATH && queue=$((queue+1)) &
-	echo $queue
 }
 else queue=$((queue+1))
 fi
 if [[ ! -d $LUA_SRC_PATH ]];then
 {
 	git clone https://github.com/lua/lua.git $LUA_SRC_PATH && queue=$((queue+1)) &
-	echo $queue
 }
 else queue=$((queue+1))
 fi
 if [[ ! -d $TENGINE_SRC_PATH ]];then
 {
 	git clone git://github.com/alibaba/tengine.git $TENGINE_SRC_PATH && queue=$((queue+1)) &
-	echo $queue
 }
 else queue=$((queue+1))
 fi
 while :;
 do
-	echo $queue
+	echo -n $queue
 	[[ queue -eq 4 ]] && break;
 done
 echo '----------編譯安裝jemalloc內存管理--------'
@@ -67,7 +66,7 @@ if [[ $? -eq 0 ]];then
 fi
 echo '----------編譯安裝Lua Jit--------'
 cd $LUA_JIT_SRC_PATH
-git checkout v2.1
+git checkout v${LUAJIT_VERSION}
 make && make install
 if [[ $? -eq 0 ]];then
 {
